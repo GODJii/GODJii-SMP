@@ -1,0 +1,20 @@
+{
+	"schemaVersion": 1,
+	"id": "godjiismp",
+	"version": "${version}",
+	"name": "GODJii SMP",
+	"description": "GODJii SMP: set your own home and pay to teleport back, plus player bounties. Uses the money from My Market.",
+	"authors": ["Kojji"],
+	"license": "CC0-1.0",
+	"environment": "*",
+	"entrypoints": {
+		"main": ["com.godjiismp.GodjiiSmpMod"]
+	},
+	"depends": {
+		"fabricloader": ">=0.16.0",
+		"minecraft": "~1.21.1",
+		"java": ">=21",
+		"fabric-api": "*",
+		"mymarket": "*"
+	}
+}
