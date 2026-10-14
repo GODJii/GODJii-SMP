@@ -23,6 +23,19 @@ Rules
 - Everybody gets a big title in the middle of the screen + a chat message when a bounty is set or claimed.
 - Lasts 24000 ticks by default = 1 Minecraft day = 20 real minutes.
 
+## Arena (new)
+- `/arena challenge <player> <stake>` sends a duel challenge; the minimum wager is `$10,000` and both players need enough funds to cover it.
+- `/arena accept` accepts the pending challenge. The winner receives both wagers; arena gear is removed when the players return.
+- `/arena start` starts a test loot event and puts the command user in the arena. `/arena join` lets other players join.
+- `/arena claim` claims the event reward when close to the center chest. The reward is paid through My Market as a randomized `$1,000,000–$3,000,000` balance prize.
+- `/arena leave` exits an event. `/arena stop` stops an event or refunds a duel wager. Start/stop require permission level 2 (server operator).
+- The arena is generated underground about 10,000 blocks east of the Overworld spawn as a 60×30×15 glowstone shell. Player block breaking inside the shell is blocked, and missing shell blocks are repaired twice a second. The arena chunks stay loaded. Reduced debug info is enabled while the arena is active.
+- Players receive the requested Netherite kit on entry. Their inventory, position, health, hunger, experience, and game mode are captured and restored after elimination or event end. Event eliminations become spectators until the event ends.
+- A scheduled loot event opens every 72,000 game ticks (one real hour at 20 TPS). `/arena start` is intended for testing.
+- Phantoms are removed when loaded, so they cannot attack players.
+
+Notes: arena snapshots live in memory, so a server crash/restart during an active match cannot recover a snapshot. The debug-info gamerule is world-wide while an arena is active. The current event prize is paid as My Market currency rather than a physical item prize.
+
 ## Config (config/godjiismp.json, created on first run)
 ```json
 {
@@ -38,4 +51,4 @@ Rules
 Put `godjiismp-1.0.0.jar` in `mods` next to My Market and Fabric API 1.21.1 (on the server, or in your own mods folder for singleplayer).
 
 ## Build
-JDK 21, `./gradlew build`, jar in `build/libs/godjiismp-1.0.0.jar`. Or use the GitHub Actions tab.
+JDK 25 is needed to run the current Fabric Loom Gradle plugin; the mod bytecode targets Java 21. Run `./gradlew build`. The remapped jar is in `build/libs/`. GitHub Actions builds it on every push and saves it as the `godjiismp-mod` workflow artifact.
