@@ -20,7 +20,6 @@ public final class ArenaCommands {
 			.then(Commands.literal("accept").executes(c -> ArenaManager.accept(c.getSource().getPlayerOrException())?1:0))
 			.then(Commands.literal("join").executes(c -> {ArenaManager.join(c.getSource().getPlayerOrException());return 1;}))
 			.then(Commands.literal("leave").executes(c -> {ArenaManager.leave(c.getSource().getPlayerOrException());return 1;}))
-			.then(Commands.literal("claim").executes(c -> {ArenaManager.claim(c.getSource().getPlayerOrException());return 1;}))
 			.then(Commands.literal("start").requires(s -> s.hasPermission(4)).executes(c -> {ArenaManager.startEvent(c.getSource().getServer(), c.getSource().getEntity() instanceof ServerPlayer p ? p : null);return 1;}))
 			.then(Commands.literal("stop").requires(s -> s.hasPermission(4)).executes(c -> {ArenaManager.stop(c.getSource().getServer());return 1;}))
 		);
