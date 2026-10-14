@@ -12,6 +12,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -153,7 +154,7 @@ public final class ArenaManager {
 	}
 	private static ItemStack prizeItem() {
 		// Prize is redeemed as My Market currency, with value randomized in the requested 1-3M range.
-		ItemStack token=new ItemStack(Items.PAPER);token.setHoverName(Component.literal("รางวัลอารีน่า $"+Money.fmt(prizeValue)).withStyle(ChatFormatting.GOLD));return token;
+		ItemStack token=new ItemStack(Items.PAPER);token.set(DataComponents.CUSTOM_NAME,Component.literal("รางวัลอารีน่า $"+Money.fmt(prizeValue)).withStyle(ChatFormatting.GOLD));return token;
 	}
 	public static void join(ServerPlayer p) {
 		if(mode!=Mode.EVENT) { tell(p,"ยังไม่มีอีเวนต์เปิดอยู่",ChatFormatting.RED);return; }
