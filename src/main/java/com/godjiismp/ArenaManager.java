@@ -113,7 +113,7 @@ public final class ArenaManager {
 	private static void buildArena(ServerLevel level) {
 		arenaX = level.getSharedSpawnPos().getX() + OFFSET;
 		arenaZ = level.getSharedSpawnPos().getZ();
-		arenaMinY = level.getMinY() + 12; // deep below the surface in the Overworld
+		arenaMinY = level.getMinBuildHeight() + 12; // deep below the surface in the Overworld
 		activeServer = level.getServer();
 		oldReducedDebug = level.getGameRules().getBoolean(net.minecraft.world.level.GameRules.RULE_REDUCEDDEBUGINFO);
 		level.getGameRules().getRule(net.minecraft.world.level.GameRules.RULE_REDUCEDDEBUGINFO).set(true, level.getServer());
