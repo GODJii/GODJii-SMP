@@ -124,6 +124,7 @@ public final class ArenaManager {
 		}
 	}
 	public static void challenge(ServerPlayer from, ServerPlayer to, long stake) {
+		if (!Config.arenaEnabled) { tell(from,"อารีน่ายังปิดอยู่: ตั้ง arenaEnabled เป็น true ใน config/godjiismp.json แล้วรีสตาร์ตเซิร์ฟเวอร์ทดสอบ",ChatFormatting.RED); return; }
 		if (from==to || stake<10_000 || mode!=null || ARENA_PLAYERS.contains(from.getUUID()) || ARENA_PLAYERS.contains(to.getUUID())) { tell(from,"คำท้าหรือเงินเดิมพันไม่ถูกต้อง",ChatFormatting.RED); return; }
 		if (Money.balance(from.server,from.getUUID())<stake || Money.balance(to.server,to.getUUID())<stake) { tell(from,"ทั้งสองฝ่ายต้องมีเงินอย่างน้อยเท่าเงินเดิมพัน",ChatFormatting.RED); return; }
 		CHALLENGES.put(to.getUUID(),from.getUUID()); STAKES.put(to.getUUID(),stake);
@@ -143,6 +144,7 @@ public final class ArenaManager {
 		broadcast(to.server,"ดวลเริ่มแล้ว! เงินรางวัล $"+Money.fmt(stake*2),ChatFormatting.GOLD); return true;
 	}
 	public static void startEvent(MinecraftServer server, ServerPlayer solo) {
+		if (!Config.arenaEnabled) { if(solo!=null) tell(solo,"อารีน่ายังปิดอยู่: ตั้ง arenaEnabled เป็น true ใน config/godjiismp.json แล้วรีสตาร์ตเซิร์ฟเวอร์ทดสอบ",ChatFormatting.RED); return; }
 		if(mode!=null) { if(solo!=null) tell(solo,"มีอารีน่ากำลังใช้งาน",ChatFormatting.RED);return; }
 		mode=Mode.EVENT; prizeClaimed=false; prizeValue=1_000_000L+new Random().nextInt(2_000_001);
 		ServerLevel level=server.overworld();buildArena(level);

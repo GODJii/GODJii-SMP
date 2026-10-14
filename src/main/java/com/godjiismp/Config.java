@@ -24,6 +24,8 @@ public final class Config {
 	public static long bountyTicks = 24_000L;
 	/** /sethome also makes this your respawn point after death (instead of the bed / world spawn). */
 	public static boolean respawnAtHome = true;
+	/** Arena world edits are opt-in so installing the mod cannot alter a live world unexpectedly. */
+	public static boolean arenaEnabled = false;
 
 	public static void load() {
 		Path file = FabricLoader.getInstance().getConfigDir().resolve("godjiismp.json");
@@ -36,6 +38,7 @@ public final class Config {
 					if (o.has("minBounty")) minBounty = Math.max(1, o.get("minBounty").getAsLong());
 					if (o.has("bountyTicks")) bountyTicks = Math.max(20, o.get("bountyTicks").getAsLong());
 					if (o.has("respawnAtHome")) respawnAtHome = o.get("respawnAtHome").getAsBoolean();
+					if (o.has("arenaEnabled")) arenaEnabled = o.get("arenaEnabled").getAsBoolean();
 				}
 			} else {
 				JsonObject o = new JsonObject();
@@ -44,6 +47,7 @@ public final class Config {
 				o.addProperty("minBounty", minBounty);
 				o.addProperty("bountyTicks", bountyTicks);
 				o.addProperty("respawnAtHome", respawnAtHome);
+				o.addProperty("arenaEnabled", arenaEnabled);
 				Gson gson = new GsonBuilder().setPrettyPrinting().create();
 				Files.writeString(file, gson.toJson(o) + "\n");
 			}
