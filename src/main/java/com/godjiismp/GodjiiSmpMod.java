@@ -3,7 +3,6 @@ package com.godjiismp;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.world.level.GameRules;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,11 +16,8 @@ public class GodjiiSmpMod implements ModInitializer {
 		Config.load();
 		CommandRegistrationCallback.EVENT.register(HomeCommands::register);
 		CommandRegistrationCallback.EVENT.register(BountyCommands::register);
-		CommandRegistrationCallback.EVENT.register(ArenaCommands::register);
-		ServerTickEvents.END_SERVER_TICK.register(ArenaManager::tick);
 		ServerLifecycleEvents.SERVER_STARTED.register(server -> server.getAllLevels().forEach(level ->
 				level.getGameRules().getRule(GameRules.RULE_DOINSOMNIA).set(false, server)));
-		ArenaManager.registerHooks();
 		Bounties.init();
 		LOGGER.info("GODJii SMP loaded (home cost {}, min bounty {})", Config.cost, Config.minBounty);
 	}

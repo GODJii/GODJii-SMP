@@ -3,12 +3,12 @@
 	"id": "godjiismp",
 	"version": "${version}",
 	"name": "GODJii SMP",
-	"description": "GODJii SMP: set your own home and pay to teleport back, plus player bounties. Uses the money from My Market.",
+	"description": "GODJii SMP: set your own home and pay to teleport back, player bounties, a coordinates bar, a trim remover and armor colors. Uses the money from My Market.",
 	"authors": ["Kojji"],
 	"license": "CC0-1.0",
 	"environment": "*",
 	"entrypoints": {
-		"main": ["com.godjiismp.GodjiiSmpMod"]
+		"main": ["com.godjiismp.GodjiiSmpMod", "com.godjiismp.GodjiiExtras"]
 	},
 	"depends": {
 		"fabricloader": ">=0.16.0",
