@@ -4,7 +4,8 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "MarketPricesMixin",
-    "BlockItemQuestMixin"
+    "BlockItemQuestMixin",
+    "EndCrystalItemMixin"
   ],
   "injectors": {
     "defaultRequire": 1
