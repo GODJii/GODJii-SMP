@@ -12,17 +12,28 @@ public final class StatsHud {
 		StatsPayload s = stats;
 		Minecraft mc = Minecraft.getInstance();
 		if (s == null || !s.visible() || mc.player == null) return;
-		String[][] rows = {{"$", Money.fmt(s.money())}, {"M", Integer.toString(s.mobs())}, {"P", Integer.toString(s.players())}, {"D", Integer.toString(s.deaths())}, {"T", (s.playTicks() / 1_728_000) + "d " + ((s.playTicks() / 72_000) % 24) + "h"}};
-		int width = 112, rowH = 13, height = 10 + rows.length * rowH;
-		int x = mc.getWindow().getGuiScaledWidth() - width - 5;
-		int y = (mc.getWindow().getGuiScaledHeight() - height) / 2;
-		g.fill(x, y, x + width, y + height, 0xA910131B);
-		g.fill(x, y, x + width, y + 1, 0xFF35B96F);
-		g.drawString(mc.font, Component.literal(s.name()), x + 5, y + 4, 0xFFFFFFFF, false);
+
+		// PLAY_TIME is the player's persistent lifetime stat; converting with Minecraft's
+		// 24,000 ticks per day keeps it through deaths and displays in in-game time.
+		String[][] rows = {
+				{"$", Money.fmt(s.money()), "0xFF48E064"},
+				{"M", Integer.toString(s.mobs()), "0xFFC36BFF"},
+				{"P", Integer.toString(s.players()), "0xFFFF6262"},
+				{"D", Integer.toString(s.deaths()), "0xFFFF9B45"},
+				{"T", (s.playTicks() / 24_000) + "d " + ((s.playTicks() / 1_000) % 24) + "h", "0xFFFFD84A"}
+		};
+
+		int width = mc.font.width(s.name());
+		for (String[] row : rows) width = Math.max(width, mc.font.width(row[1]) + 12);
+		int rowH = 10;
+		int x = mc.getWindow().getGuiScaledWidth() - width - 4;
+		int y = (mc.getWindow().getGuiScaledHeight() - (10 + rows.length * rowH)) / 2;
+
+		g.drawString(mc.font, Component.literal(s.name()), x, y, 0xFFFFFFFF, true);
 		for (int i = 0; i < rows.length; i++) {
-			int yy = y + 15 + i * rowH;
-			g.drawString(mc.font, Component.literal(rows[i][0]), x + 6, yy, 0xFF55D68A, false);
-			g.drawString(mc.font, Component.literal(rows[i][1]), x + width - mc.font.width(rows[i][1]) - 6, yy, 0xFFE8EDF2, false);
+			int yy = y + 10 + i * rowH;
+			g.drawString(mc.font, Component.literal(rows[i][0]), x, yy, Integer.decode(rows[i][2]), true);
+			g.drawString(mc.font, Component.literal(rows[i][1]), x + width - mc.font.width(rows[i][1]), yy, 0xFFE8EDF2, true);
 		}
 	}
 }
