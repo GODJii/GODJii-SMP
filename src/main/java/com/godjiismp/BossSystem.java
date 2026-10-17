@@ -196,9 +196,9 @@ public final class BossSystem {
 		boss.setPersistenceRequired();
 		boss.addTag("godjiismp_skeleton_king");
 		AttributeInstance health = boss.getAttribute(Attributes.MAX_HEALTH);
-		if (health != null) health.setBaseValue(60.0);
+		if (health != null) health.setBaseValue(100.0);
 		AttributeInstance damage = boss.getAttribute(Attributes.ATTACK_DAMAGE);
-		if (damage != null) damage.setBaseValue(12.0);
+		if (damage != null) damage.setBaseValue(15.0);
 		AttributeInstance scale = boss.getAttribute(Attributes.SCALE);
 		if (scale != null) scale.setBaseValue(4.0);
 		boss.setHealth(boss.getMaxHealth());
@@ -250,7 +250,6 @@ public final class BossSystem {
 				: roll < 90 ? Items.NETHERITE_BLOCK
 				: roll < 95 ? Items.DRAGON_HEAD
 				: roll < 99 ? Items.DRAGON_EGG : Items.ELYTRA);
-		stack.set(DataComponents.CUSTOM_NAME, Component.literal("Skeleton King Reward").withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD));
 		return stack;
 	}
 }
