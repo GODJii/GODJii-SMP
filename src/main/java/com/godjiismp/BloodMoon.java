@@ -14,7 +14,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.Mob;
@@ -62,15 +61,11 @@ public final class BloodMoon {
 		if (world.getGameTime() % 20 != 0) return;
 		if (phase >= 11_000 && phase < 12_000 && data.warnedDay() != day) {
 			data.setWarnedDay(day);
-			for (ServerPlayer p : server.getPlayerList().getPlayers()) p.connection.send(new ClientboundSetTitleTextPacket(Component.literal("Blood Moon rises tonight!").withStyle(ChatFormatting.RED, ChatFormatting.BOLD)));
 			broadcast(server, "A Blood Moon may rise tonight. Prepare before dusk!", ChatFormatting.RED);
 		}
 		if (phase >= 12_000 && phase < 13_000 && data.checkedDay() != day) {
 			data.setCheckedDay(day);
-			if (ThreadLocalRandom.current().nextInt(7) == 0) {
-				for (ServerPlayer p : server.getPlayerList().getPlayers()) p.connection.send(new ClientboundSetTitleTextPacket(Component.literal("BLOOD MOON").withStyle(ChatFormatting.DARK_RED, ChatFormatting.BOLD)));
-				start(server, false);
-			}
+			if (ThreadLocalRandom.current().nextInt(7) == 0) start(server, false);
 		}
 		if (data.active() && day > data.startedDay() && phase < 1_000) stop(server);
 	}
@@ -122,4 +117,3 @@ public final class BloodMoon {
 		server.getPlayerList().broadcastSystemMessage(Component.literal(text).withStyle(color), false);
 	}
 }
-
