@@ -23,6 +23,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -169,7 +170,8 @@ public final class BossSystem {
 				return;
 			}
 		}
-		Skeleton boss = new Skeleton(world);
+		Skeleton boss = EntityType.SKELETON.create(world);
+		if (boss == null) return;
 		boss.moveTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, 0, 0);
 		boss.setCustomName(Component.literal("Skeleton King").withStyle(ChatFormatting.DARK_RED, ChatFormatting.BOLD));
 		boss.setCustomNameVisible(true);
