@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "package": "com.godjiismp.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "MarketPricesMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
