@@ -72,7 +72,7 @@ public final class BossSystem {
 					target.getInventory().add(makeCrystal());
 					c.getSource().sendSuccess(() -> Component.literal("Summon Crystal given to " + target.getName().getString() + "."), true);
 					return 1;
-				}))));
+				})));
 		dispatcher.register(Commands.literal("boss").requires(s -> s.hasPermission(2))
 				.then(Commands.literal("kill").executes(c -> {
 					UUID uuid = BossData.get(c.getSource().getServer()).boss();
@@ -83,7 +83,7 @@ public final class BossSystem {
 					}
 					entity.kill();
 					return 1;
-				}))));
+				})));
 	}
 
 	public static boolean isSummonCrystal(ItemStack stack) {
