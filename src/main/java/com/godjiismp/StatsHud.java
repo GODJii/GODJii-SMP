@@ -32,7 +32,8 @@ public final class StatsHud {
 		g.drawString(mc.font, Component.literal(s.name()), x, y, 0xFFFFFFFF, true);
 		for (int i = 0; i < rows.length; i++) {
 			int yy = y + 10 + i * rowH;
-			g.drawString(mc.font, Component.literal(rows[i][0]), x, yy, Integer.decode(rows[i][2]), true);
+			int color = (int) Long.decode(rows[i][2]).longValue();
+			g.drawString(mc.font, Component.literal(rows[i][0]), x, yy, color, true);
 			g.drawString(mc.font, Component.literal(rows[i][1]), x + width - mc.font.width(rows[i][1]), yy, 0xFFE8EDF2, true);
 		}
 	}
