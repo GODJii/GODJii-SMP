@@ -2,6 +2,7 @@ package com.godjiismp;
 
 import com.mymarket.MoneyData;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
 
 import java.util.UUID;
 
@@ -44,3 +45,4 @@ public final class Money {
 		return (v / pow) + f + suffix[idx];
 	}
 }
+
