@@ -5,7 +5,8 @@
   "mixins": [
     "MarketPricesMixin",
     "BlockItemQuestMixin",
-    "EndCrystalItemMixin"
+    "EndCrystalItemMixin",
+    "SkeletonKingLootMixin"
   ],
   "injectors": {
     "defaultRequire": 1

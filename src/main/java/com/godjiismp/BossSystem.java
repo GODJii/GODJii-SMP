@@ -20,6 +20,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.BossEvent;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -48,12 +50,20 @@ public final class BossSystem {
 	private static final String CRYSTAL_KEY = "godjiismp_summon_crystal";
 	private record Pending(long due, BlockPos pos) {}
 	private static final Map<UUID, Pending> PENDING = new HashMap<>();
+	private static final Map<UUID, Map<UUID, Float>> DAMAGE = new HashMap<>();
 	private static ServerBossEvent bossBar;
 
 	public static void init() {
 		CommandRegistrationCallback.EVENT.register(BossSystem::register);
 		ServerTickEvents.END_SERVER_TICK.register(BossSystem::tick);
 		ServerLivingEntityEvents.AFTER_DEATH.register(BossSystem::onDeath);
+		ServerLivingEntityEvents.AFTER_DAMAGE.register((entity, source, base, dealt, blocked) -> {
+			if (entity.getServer() != null && entity instanceof Skeleton && entity.getUUID().equals(BossData.get(entity.getServer()).boss()) && dealt > 0) {
+				Entity attacker = source.getEntity();
+				if (attacker instanceof net.minecraft.world.entity.projectile.Projectile projectile) attacker = projectile.getOwner();
+				if (attacker instanceof ServerPlayer player) DAMAGE.computeIfAbsent(entity.getUUID(), k -> new HashMap<>()).merge(player.getUUID(), dealt, Float::sum);
+			}
+		});
 		ServerEntityEvents.ENTITY_LOAD.register((entity, world) -> {
 			if (entity instanceof Skeleton && entity.getUUID().equals(BossData.get(world.getServer()).boss())) {
 				if (bossBar == null) makeBossBar();
@@ -92,6 +102,7 @@ public final class BossSystem {
 		CustomData custom = stack.get(DataComponents.CUSTOM_DATA);
 		return custom != null && custom.copyTag().getBoolean(CRYSTAL_KEY);
 	}
+	public static boolean isKing(Entity entity) { return entity.getTags().contains("godjiismp_skeleton_king"); }
 
 	public static ItemStack makeCrystal() {
 		ItemStack stack = new ItemStack(Items.END_CRYSTAL);
@@ -120,8 +131,8 @@ public final class BossSystem {
 		}
 		if (PENDING.containsKey(player.getUUID())) return InteractionResult.FAIL;
 		PENDING.put(player.getUUID(), new Pending(server.overworld().getGameTime() + 60, context.getClickedPos().above()));
-		player.sendSystemMessage(Component.literal("The crystal is charging. Hold position for 3 seconds...").withStyle(ChatFormatting.LIGHT_PURPLE));
-		player.displayClientMessage(Component.literal("3").withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.BOLD), true);
+		player.connection.send(new ClientboundSetTitleTextPacket(Component.literal("3").withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.BOLD)));
+		player.playSound(SoundEvents.BEACON_ACTIVATE, 0.7f, 1.5f);
 		return InteractionResult.SUCCESS;
 	}
 
@@ -129,7 +140,14 @@ public final class BossSystem {
 		long now = server.overworld().getGameTime();
 		for (var it = PENDING.entrySet().iterator(); it.hasNext();) {
 			var entry = it.next();
-			if (now < entry.getValue().due()) continue;
+			long remain = entry.getValue().due() - now;
+			if (remain > 0) {
+				if (remain % 20 == 0) {
+					ServerPlayer p = server.getPlayerList().getPlayer(entry.getKey());
+					if (p != null) p.connection.send(new ClientboundSetTitleTextPacket(Component.literal(Integer.toString((int)(remain / 20))).withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.BOLD)));
+				}
+				continue;
+			}
 			it.remove();
 			ServerPlayer player = server.getPlayerList().getPlayer(entry.getKey());
 			if (player == null) continue;
@@ -176,6 +194,7 @@ public final class BossSystem {
 		boss.setCustomName(Component.literal("Skeleton King").withStyle(ChatFormatting.DARK_RED, ChatFormatting.BOLD));
 		boss.setCustomNameVisible(true);
 		boss.setPersistenceRequired();
+		boss.addTag("godjiismp_skeleton_king");
 		AttributeInstance health = boss.getAttribute(Attributes.MAX_HEALTH);
 		if (health != null) health.setBaseValue(60.0);
 		AttributeInstance damage = boss.getAttribute(Attributes.ATTACK_DAMAGE);
@@ -202,17 +221,24 @@ public final class BossSystem {
 		BossData data = BossData.get(server);
 		if (!entity.getUUID().equals(data.boss())) return;
 		data.setBoss(null);
+		Map<UUID, Float> damage = DAMAGE.remove(entity.getUUID());
 		if (bossBar != null) { bossBar.removeAllPlayers(); bossBar = null; }
 		ItemStack reward = pickDrop();
 		ItemEntity drop = new ItemEntity(entity.level(), entity.getX(), entity.getY() + 0.4, entity.getZ(), reward);
 		entity.level().addFreshEntity(drop);
+		ServerPlayer topDamager = null;
+		if (damage != null) {
+			UUID topId = damage.entrySet().stream().max(Map.Entry.comparingByValue()).map(Map.Entry::getKey).orElse(null);
+			if (topId != null) topDamager = server.getPlayerList().getPlayer(topId);
+		}
 		Entity attacker = source.getEntity();
 		if (attacker instanceof net.minecraft.world.entity.projectile.Projectile projectile) attacker = projectile.getOwner();
-		if (attacker instanceof ServerPlayer player) {
-			Money.give(server, player.getUUID(), 2_000_000L);
-			player.displayClientMessage(Component.literal("Skeleton King defeated · +$2M").withStyle(ChatFormatting.GOLD), true);
+		String killer = attacker instanceof ServerPlayer p ? p.getGameProfile().getName() : "the environment";
+		if (topDamager != null) {
+			Money.give(server, topDamager.getUUID(), 2_000_000L);
+			topDamager.displayClientMessage(Component.literal("Skeleton King damage reward · +$2M").withStyle(ChatFormatting.GOLD), true);
 		}
-		server.getPlayerList().broadcastSystemMessage(Component.literal("The Skeleton King was defeated. Its reward: " + reward.getHoverName().getString())
+		server.getPlayerList().broadcastSystemMessage(Component.literal("Skeleton King defeated by " + killer + ". Its reward: " + reward.getHoverName().getString())
 				.withStyle(ChatFormatting.GOLD), false);
 	}
 

@@ -18,11 +18,15 @@ public final class Money {
 
 	/** Takes the money. Returns false (and takes nothing) if the player has too little. */
 	public static boolean take(MinecraftServer server, UUID id, long amount) {
-		return MoneyData.get(server).take(id, amount);
+		boolean ok = MoneyData.get(server).take(id, amount);
+		if (ok && server.getPlayerList().getPlayer(id) != null) StatsPanel.send(server.getPlayerList().getPlayer(id));
+		return ok;
 	}
 
 	public static void give(MinecraftServer server, UUID id, long amount) {
 		MoneyData.get(server).add(id, amount);
+		ServerPlayer player = server.getPlayerList().getPlayer(id);
+		if (player != null) StatsPanel.send(player);
 	}
 
 	/** 1-999, then 1K, 1.5M, 2.25B ... (rounds down) */
