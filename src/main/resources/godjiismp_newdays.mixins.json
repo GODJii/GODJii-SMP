@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "com.godjiismp.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "MarketPricesMixin",
+    "BlockItemQuestMixin",
+    "EndCrystalItemMixin",
+    "SkeletonKingLootMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
