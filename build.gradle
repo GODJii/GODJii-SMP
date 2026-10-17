@@ -13,7 +13,7 @@ repositories {
 
 loom {
 	mods {
-		"godjiismp" {
+		"godjiismp_newdays" {
 			sourceSet sourceSets.main
 		}
 	}
@@ -27,6 +27,10 @@ dependencies {
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+
+	// Bundle the supplied latest My Market patch inside this distribution.
+	modImplementation files("libs/mymarket-latest.jar")
+	include files("libs/mymarket-latest.jar")
 }
 
 processResources {
@@ -51,6 +55,10 @@ java {
 
 	sourceCompatibility = JavaVersion.VERSION_21
 	targetCompatibility = JavaVersion.VERSION_21
+}
+
+base {
+	archivesName = "godjiismp-new-days"
 }
 
 jar {
