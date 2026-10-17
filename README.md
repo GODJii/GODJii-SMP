@@ -14,9 +14,10 @@ This is an in-progress integration branch for GODJii SMP and the supplied My Mar
 - Daily quests: `/quest` displays the current mining, mob-hunting, farming, or logging objective. Progress persists and completion pays $1M–$3M automatically.
 - Market event: `/market` shows the daily HOT/COLD categories. The event changes sale prices only and persists through restarts.
 - Permanent player titles: `/title`, `/title buy <id>`, `/title set <id>`, and `/title off` manage titles shown above players and in the tab list.
+- Blood Moon: naturally has a 1-in-7 chance at night; OPs can use `/bloodmoon start|stop|status` for testing. Blood Moon mobs gain 100% health and 30% attack damage, and player kills pay $10K.
 - Phantoms disabled through the vanilla `doInsomnia` gamerule.
 
-Arena and scheduled Arena events are intentionally not included in this NEW DAYS build, following the latest project specification. Fish quests, the custom quest/HUD notices and sidebar, Blood Moon, Summon Crystal, and Skeleton King are still being implemented. Do not install this draft on the live server.
+Arena and scheduled Arena events are intentionally not included in this NEW DAYS build, following the latest project specification. Fish quests, the custom quest/HUD notices and sidebar, Summon Crystal, and Skeleton King are still being implemented. Do not install this draft on the live server.
 
 ## Install
 

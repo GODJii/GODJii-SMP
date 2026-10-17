@@ -17,6 +17,7 @@ public class GodjiiExtras implements ModInitializer {
 		MarketFluctuations.init();
 		DailyQuests.init();
 		PlayerTitles.init();
+		BloodMoon.init();
 		CoordsHud.init();
 		ArmorAura.init();
 		GodjiiSmpMod.LOGGER.info("GODJii SMP extras loaded (trim remover {}, armor color {})",
