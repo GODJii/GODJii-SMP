@@ -15,6 +15,7 @@ public class GodjiiExtras implements ModInitializer {
 		CommandRegistrationCallback.EVENT.register(ArmorCommands::register);
 		CommandRegistrationCallback.EVENT.register(ArmorAura::register);
 		MarketFluctuations.init();
+		DailyQuests.init();
 		CoordsHud.init();
 		ArmorAura.init();
 		GodjiiSmpMod.LOGGER.info("GODJii SMP extras loaded (trim remover {}, armor color {})",

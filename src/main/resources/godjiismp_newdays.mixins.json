@@ -3,7 +3,8 @@
   "package": "com.godjiismp.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "MarketPricesMixin"
+    "MarketPricesMixin",
+    "BlockItemQuestMixin"
   ],
   "injectors": {
     "defaultRequire": 1
