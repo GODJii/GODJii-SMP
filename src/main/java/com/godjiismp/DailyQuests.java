@@ -3,8 +3,8 @@ package com.godjiismp;
 import com.mojang.brigadier.CommandDispatcher;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
@@ -18,7 +18,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.AgeableBlock;
+import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.entity.player.Player;
 
 import java.time.LocalDate;
@@ -83,12 +83,12 @@ public final class DailyQuests {
 	private static DailyQuestData.Quest current(MinecraftServer server, ServerPlayer player) {
 		long day = dailyKey();
 		DailyQuestData data = DailyQuestData.get(server);
+		data.prepareDay(day);
 		DailyQuestData.Quest q = data.get(player.getUUID());
 		if (q == null || q.day() != day) {
 			Template t = POOL.get(ThreadLocalRandom.current().nextInt(POOL.size()));
 			q = new DailyQuestData.Quest(t.id(), t.label(), t.target(), 0, day, false);
 			data.set(player.getUUID(), q);
-			data.clearPlaced();
 			player.sendSystemMessage(Component.literal("Daily quest: " + t.label() + ". Reward: $1M–$3M.").withStyle(ChatFormatting.GOLD));
 		}
 		return q;
@@ -106,7 +106,7 @@ public final class DailyQuests {
 	}
 	private static boolean isMatureCrop(BlockState state) {
 		return (state.is(net.minecraft.world.level.block.Blocks.WHEAT) || state.is(net.minecraft.world.level.block.Blocks.CARROTS))
-				&& state.getValue(AgeableBlock.AGE) >= 7;
+				&& state.getValue(CropBlock.AGE) >= 7;
 	}
 	private static void add(ServerPlayer player, int amount) {
 		DailyQuestData data = DailyQuestData.get(player.getServer());

@@ -18,6 +18,7 @@ public final class DailyQuestData extends SavedData {
 	public static final SavedData.Factory<DailyQuestData> FACTORY = new SavedData.Factory<>(DailyQuestData::new, DailyQuestData::load, null);
 	private final Map<UUID, Quest> quests = new HashMap<>();
 	private final Set<String> placedBlocks = new HashSet<>();
+	private long placedBlocksDay = Long.MIN_VALUE;
 
 	public static DailyQuestData get(MinecraftServer server) {
 		return server.overworld().getDataStorage().computeIfAbsent(FACTORY, "godjiismp_daily_quests");
@@ -28,7 +29,12 @@ public final class DailyQuestData extends SavedData {
 	public boolean isPlayerPlaced(String key) { return placedBlocks.contains(key); }
 	public void markPlaced(String key) { if (placedBlocks.add(key)) setDirty(); }
 	public void unmarkPlaced(String key) { if (placedBlocks.remove(key)) setDirty(); }
-	public void clearPlaced() { if (!placedBlocks.isEmpty()) { placedBlocks.clear(); setDirty(); } }
+	public void prepareDay(long day) {
+		if (placedBlocksDay == day) return;
+		placedBlocksDay = day;
+		placedBlocks.clear();
+		setDirty();
+	}
 	public void progress(UUID id, int amount) {
 		Quest q = quests.get(id);
 		if (q == null || q.complete()) return;
@@ -57,6 +63,7 @@ public final class DailyQuestData extends SavedData {
 		}
 		ListTag placed = tag.getList("placedBlocks", Tag.TAG_STRING);
 		for (int i = 0; i < placed.size(); i++) data.placedBlocks.add(placed.getString(i));
+		data.placedBlocksDay = tag.getLong("placedBlocksDay");
 		return data;
 	}
 
@@ -72,6 +79,7 @@ public final class DailyQuestData extends SavedData {
 		ListTag placed = new ListTag();
 		placedBlocks.forEach(key -> placed.add(net.minecraft.nbt.StringTag.valueOf(key)));
 		tag.put("placedBlocks", placed);
+		tag.putLong("placedBlocksDay", placedBlocksDay);
 		return tag;
 	}
 

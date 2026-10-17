@@ -13,6 +13,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -118,7 +119,11 @@ public final class MarketFluctuations {
 
 	/** Mixin hook for Prices.unitSell; the shop's buyPrice path remains untouched. */
 	public static long applySellPrice(ItemStack stack, long basePrice) {
-		if (stack.isEmpty() || basePrice <= 0) return basePrice;
+		if (stack.isEmpty()) return basePrice;
+		// Ensure every future Skeleton King drop is sellable even when the supplied market
+		// patch has no entry for it. Existing market prices always take precedence.
+		if (basePrice <= 0) basePrice = bossDropFallback(stack);
+		if (basePrice <= 0) return basePrice;
 		String categoryName = categoryFor(stack);
 		if (categoryName.equals(hotCategory) && hotPercent > 0) {
 			return Math.max(1, Math.round(basePrice * (100.0 + hotPercent) / 100.0));
@@ -127,6 +132,18 @@ public final class MarketFluctuations {
 			return Math.max(1, Math.round(basePrice * (100.0 - coldPercent) / 100.0));
 		}
 		return basePrice;
+	}
+
+	private static long bossDropFallback(ItemStack stack) {
+		var item = stack.getItem();
+		long listedValue = item == Items.NETHERITE_INGOT ? 4_700_000L
+				: item == Items.NETHER_STAR ? 5_000_000L
+				: item == Items.BEACON ? 6_000_000L
+				: item == Items.NETHERITE_BLOCK ? 41_800_000L
+				: item == Items.DRAGON_HEAD ? 56_000_000L
+				: item == Items.DRAGON_EGG ? 100_000_000L
+				: item == Items.ELYTRA ? 368_000_000L : 0L;
+		return listedValue == 0 ? 0 : Math.round(listedValue * 0.8);
 	}
 
 	private static String categoryFor(ItemStack stack) {
