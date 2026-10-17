@@ -7,7 +7,7 @@
 	"authors": ["Kojji"],
 	"license": "CC0-1.0",
 	"environment": "*",
-	"jars": [{ "file": "META-INF/jars/mymarket-latest.jar" }],
+	"jars": [{ "file": "META-INF/jars/mymarket-17537.jar" }],
 	"entrypoints": {
 		"main": ["com.godjiismp.GodjiiSmpMod", "com.godjiismp.GodjiiExtras"],
 		"client": ["com.godjiismp.NewDaysClient"]
