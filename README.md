@@ -9,6 +9,8 @@ This distribution combines the GODJii SMP server features with the supplied late
 - Bounties: `/bounty set <player> <amount>` and `/bounty list`.
 - Player transfers: `/pay <player> <amount>` (examples: `250K`, `1.5M`).
 - Teleport requests: `/tpa <player>`, `/tpaccept`, `/tpdeny`, `/tpa cancel`.
+- Armor dye reset: `/armor color reset all` restores every dyed armor piece in inventory.
+- Matching-color armor aura: `/aura on` and `/aura off` toggle the cosmetic particles.
 - Phantoms disabled through the vanilla `doInsomnia` gamerule.
 
 Arena and scheduled Arena events are intentionally not included in this NEW DAYS build, following the latest project specification. Arena commands should not be used from this build.

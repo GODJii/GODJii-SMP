@@ -77,7 +77,9 @@ public final class ArmorCommands {
 		d.register(Commands.literal("armor")
 				.then(Commands.literal("trimremove").executes(c -> trimRemove(c.getSource().getPlayerOrException())))
 				.then(Commands.literal("color")
-						.then(Commands.literal("reset").executes(c -> reset(c.getSource().getPlayerOrException())))
+						.then(Commands.literal("reset")
+								.executes(c -> reset(c.getSource().getPlayerOrException()))
+								.then(Commands.literal("all").executes(c -> resetAll(c.getSource().getPlayerOrException()))))
 						.then(Commands.argument("color", StringArgumentType.greedyString())
 								.suggests((c, b) -> SharedSuggestionProvider.suggest(COLORS.keySet(), b))
 								.executes(c -> color(c.getSource().getPlayerOrException(),
@@ -88,6 +90,7 @@ public final class ArmorCommands {
 					say(p, "/armor trimremove  - remove its trim ($" + Money.fmt(ExtrasConfig.trimRemoveCost) + ")", ChatFormatting.GRAY);
 					say(p, "/armor color <color>  - dye it, e.g. red or ff8800 ($" + Money.fmt(ExtrasConfig.armorColorCost) + ")", ChatFormatting.GRAY);
 					say(p, "/armor color reset  - back to the original (free)", ChatFormatting.GRAY);
+					say(p, "/armor color reset all  - restore every dyed piece in your inventory (free)", ChatFormatting.GRAY);
 					return 1;
 				}));
 	}
@@ -115,6 +118,8 @@ public final class ArmorCommands {
 		CustomData d = s.get(DataComponents.CUSTOM_DATA);
 		return d != null && !d.copyTag().getString(SKIN_KEY).isEmpty();
 	}
+
+	static boolean isAuraArmor(ItemStack stack) { return isSkin(stack); }
 
 	private static Integer parseColor(String text) {
 		String t = text.trim().toLowerCase(Locale.ROOT).replace(' ', '_');
@@ -251,11 +256,34 @@ public final class ArmorCommands {
 			say(p, "Hold an armor piece you dyed with /armor color.", ChatFormatting.RED);
 			return 0;
 		}
+		p.setItemInHand(InteractionHand.MAIN_HAND, restoreOriginal(held));
+		say(p, "Original armor restored.", ChatFormatting.GREEN);
+		return 1;
+	}
+
+	private static int resetAll(ServerPlayer p) {
+		int count = 0;
+		for (int slot = 0; slot < p.getInventory().getContainerSize(); slot++) {
+			ItemStack stack = p.getInventory().getItem(slot);
+			if (isSkin(stack)) {
+				p.getInventory().setItem(slot, restoreOriginal(stack));
+				count++;
+			}
+		}
+		if (count == 0) {
+			say(p, "You have no dyed armor to restore.", ChatFormatting.YELLOW);
+			return 0;
+		}
+		p.inventoryMenu.broadcastChanges();
+		say(p, "Restored " + count + " dyed armor piece" + (count == 1 ? "" : "s") + ".", ChatFormatting.GREEN);
+		return count;
+	}
+
+	private static ItemStack restoreOriginal(ItemStack held) {
 		CompoundTag tag = held.get(DataComponents.CUSTOM_DATA).copyTag();
 		Item orig = BuiltInRegistries.ITEM.get(ResourceLocation.parse(tag.getString(SKIN_KEY)));
 		if (orig == Items.AIR) {
-			say(p, "The original armor type no longer exists.", ChatFormatting.RED);
-			return 0;
+			return held.copy();
 		}
 		ItemStack r = new ItemStack(orig);
 		var enchants = held.get(DataComponents.ENCHANTMENTS);
@@ -268,8 +296,6 @@ public final class ArmorCommands {
 		tag.remove(SKIN_KEY);
 		if (!tag.isEmpty()) r.set(DataComponents.CUSTOM_DATA, CustomData.of(tag));
 
-		p.setItemInHand(InteractionHand.MAIN_HAND, r);
-		say(p, "Original armor restored.", ChatFormatting.GREEN);
-		return 1;
+		return r;
 	}
 }
