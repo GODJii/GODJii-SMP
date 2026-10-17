@@ -11,6 +11,8 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.scores.PlayerTeam;
+import net.minecraft.world.scores.Scoreboard;
 
 import java.util.List;
 import java.util.Locale;
@@ -88,17 +90,51 @@ public final class PlayerTitles {
 	}
 
 	private static void apply(ServerPlayer player) {
-		String active = TitleData.get(player.getServer()).active(player.getUUID());
+		TitleData data = TitleData.get(player.getServer());
+		String active = data.active(player.getUUID());
 		Title title = find(active);
+		Scoreboard scoreboard = player.getServer().getScoreboard();
+		String entry = player.getScoreboardName();
+		String ownTeamName = titleTeamName(player);
 		if (title == null) {
-			player.setCustomName(null);
-			player.setCustomNameVisible(false);
-			player.setTabListDisplayName(null);
+			PlayerTeam current = scoreboard.getPlayersTeam(entry);
+			if (current != null && current.getName().equals(ownTeamName)) scoreboard.removePlayerFromTeam(entry, current);
+			String previousName = data.previousTeam(player.getUUID());
+			if (!previousName.isEmpty()) {
+				PlayerTeam previous = scoreboard.getPlayerTeam(previousName);
+				if (previous != null) scoreboard.addPlayerToTeam(entry, previous);
+			}
+			data.clearPreviousTeam(player.getUUID());
+			PlayerTeam oldTitleTeam = scoreboard.getPlayerTeam(ownTeamName);
+			if (oldTitleTeam != null && oldTitleTeam.getPlayers().isEmpty()) scoreboard.removePlayerTeam(oldTitleTeam);
 			return;
 		}
-		player.setCustomName(Component.literal("[" + title.label() + "] ").withStyle(title.color()).append(player.getName()));
-		player.setCustomNameVisible(true);
-		player.setTabListDisplayName(Component.literal("[" + title.label() + "] ").withStyle(title.color()).append(player.getName()));
+
+		PlayerTeam current = scoreboard.getPlayersTeam(entry);
+		if (current == null || !current.getName().equals(ownTeamName)) {
+			if (!data.hasPreviousTeam(player.getUUID())) data.recordPreviousTeam(player.getUUID(), current == null ? "" : current.getName());
+			if (current != null) scoreboard.removePlayerFromTeam(entry, current);
+		}
+		PlayerTeam team = scoreboard.getPlayerTeam(ownTeamName);
+		if (team == null) team = scoreboard.addPlayerTeam(ownTeamName);
+		String previousName = data.previousTeam(player.getUUID());
+		PlayerTeam previous = previousName.isEmpty() ? null : scoreboard.getPlayerTeam(previousName);
+		team.setPlayerPrefix(Component.literal("[" + title.label() + "] ").withStyle(title.color())
+				.append(previous == null ? Component.empty() : previous.getPlayerPrefix()));
+		if (previous != null) {
+			team.setPlayerSuffix(previous.getPlayerSuffix());
+			team.setAllowFriendlyFire(previous.isAllowFriendlyFire());
+			team.setSeeFriendlyInvisibles(previous.canSeeFriendlyInvisibles());
+			team.setNameTagVisibility(previous.getNameTagVisibility());
+			team.setDeathMessageVisibility(previous.getDeathMessageVisibility());
+			team.setColor(previous.getColor());
+			team.setCollisionRule(previous.getCollisionRule());
+		}
+		scoreboard.addPlayerToTeam(entry, team);
+	}
+
+	private static String titleTeamName(ServerPlayer player) {
+		return "gt" + player.getUUID().toString().replace("-", "").substring(0, 14);
 	}
 
 	private static Title find(String id) {

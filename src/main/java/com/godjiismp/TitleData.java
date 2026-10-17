@@ -16,6 +16,7 @@ public final class TitleData extends SavedData {
 	public static final SavedData.Factory<TitleData> FACTORY = new SavedData.Factory<>(TitleData::new, TitleData::load, null);
 	private final Map<UUID, Map<String, Boolean>> titles = new HashMap<>();
 	private final Map<UUID, String> active = new HashMap<>();
+	private final Map<UUID, String> previousTeams = new HashMap<>();
 
 	public static TitleData get(MinecraftServer server) {
 		return server.overworld().getDataStorage().computeIfAbsent(FACTORY, "godjiismp_titles");
@@ -25,6 +26,10 @@ public final class TitleData extends SavedData {
 	public String active(UUID player) { return active.getOrDefault(player, ""); }
 	public void activate(UUID player, String id) { active.put(player, id); setDirty(); }
 	public void deactivate(UUID player) { active.remove(player); setDirty(); }
+	public boolean hasPreviousTeam(UUID player) { return previousTeams.containsKey(player); }
+	public String previousTeam(UUID player) { return previousTeams.getOrDefault(player, ""); }
+	public void recordPreviousTeam(UUID player, String team) { previousTeams.put(player, team == null ? "" : team); setDirty(); }
+	public void clearPreviousTeam(UUID player) { if (previousTeams.remove(player) != null) setDirty(); }
 
 	public static TitleData load(CompoundTag tag, HolderLookup.Provider lookup) {
 		TitleData data = new TitleData();
@@ -39,6 +44,7 @@ public final class TitleData extends SavedData {
 				data.titles.put(uuid, owned);
 				String selected = entry.getString("active");
 				if (!selected.isEmpty()) data.active.put(uuid, selected);
+				if (entry.contains("previousTeam")) data.previousTeams.put(uuid, entry.getString("previousTeam"));
 			} catch (Exception ignored) { }
 		}
 		return data;
@@ -49,7 +55,9 @@ public final class TitleData extends SavedData {
 			CompoundTag entry = new CompoundTag();
 			entry.putUUID("uuid", uuid);
 			ListTag ids = new ListTag(); owned.keySet().forEach(id -> ids.add(net.minecraft.nbt.StringTag.valueOf(id)));
-			entry.put("owned", ids); entry.putString("active", active.getOrDefault(uuid, "")); list.add(entry);
+			entry.put("owned", ids); entry.putString("active", active.getOrDefault(uuid, ""));
+			if (previousTeams.containsKey(uuid)) entry.putString("previousTeam", previousTeams.get(uuid));
+			list.add(entry);
 		});
 		tag.put("players", list);
 		return tag;
