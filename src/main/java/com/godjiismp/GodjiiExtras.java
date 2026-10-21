@@ -11,6 +11,7 @@ public class GodjiiExtras implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		ExtrasConfig.load();
+		com.godjiismp.market.SellMenu.init();
 		CommandRegistrationCallback.EVENT.register(CoordsHud::register);
 		CommandRegistrationCallback.EVENT.register(ArmorCommands::register);
 		CommandRegistrationCallback.EVENT.register(ArmorAura::register);
