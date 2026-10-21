@@ -6,20 +6,27 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
-/** Compact server hub inspired by the button-grid layout used on DrDonut. */
+/** Compact, transparent server hub inspired by DrDonut's two-column menu. */
 public final class MainMenuScreen extends Screen {
     private static final int BUTTON_WIDTH = 150;
     private static final int BUTTON_HEIGHT = 20;
     private static final int GAP = 5;
+    private int savedBlur;
+    private boolean capturedBlur;
 
     public MainMenuScreen() { super(Component.literal("GODJii SMP")); }
 
     @Override protected void init() {
+        if (!capturedBlur) {
+            savedBlur = minecraft.options.getMenuBackgroundBlurriness();
+            minecraft.options.menuBackgroundBlurriness().set(0);
+            capturedBlur = true;
+        }
         int left = (width - BUTTON_WIDTH * 2 - GAP) / 2;
-        int top = (height - 4 * (BUTTON_HEIGHT + GAP) - 43) / 2 + 28;
+        int top = (height - 4 * (BUTTON_HEIGHT + GAP) - 43) / 2 + 39;
         String[][] entries = {
                 {"Home", "home"}, {"Shop", "shop"},
-                {"Sell", "sell"}, {"Skills", "skills"},
+                {"Sell", "sellgui"}, {"Skills", "skills"},
                 {"Daily Quests", "quest"}, {"Stats", "sidebar"},
                 {"Bounties", "bounty"}, {"Titles", "title"}
         };
@@ -42,14 +49,17 @@ public final class MainMenuScreen extends Screen {
     }
 
     @Override public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-        graphics.fill(0, 0, width, height, 0x99000000);
-        int panelWidth = BUTTON_WIDTH * 2 + GAP + 24;
-        int panelHeight = 4 * (BUTTON_HEIGHT + GAP) + 43;
-        int x = (width - panelWidth) / 2, y = (height - panelHeight) / 2;
-        graphics.fill(x, y, x + panelWidth, y + panelHeight, 0xDD161616);
-        graphics.fill(x, y, x + panelWidth, y + 2, 0xFF38B56C);
-        graphics.drawCenteredString(font, title, width / 2, y + 9, 0xFFFFFFFF);
+        int titleY = (height - 4 * (BUTTON_HEIGHT + GAP) - 43) / 2 + 16;
+        graphics.drawCenteredString(font, title, width / 2, titleY, 0xFFFFFFFF);
         super.render(graphics, mouseX, mouseY, delta);
+    }
+
+    @Override public void removed() {
+        if (capturedBlur && minecraft != null) {
+            minecraft.options.menuBackgroundBlurriness().set(savedBlur);
+            capturedBlur = false;
+        }
+        super.removed();
     }
 
     @Override public boolean isPauseScreen() { return false; }
