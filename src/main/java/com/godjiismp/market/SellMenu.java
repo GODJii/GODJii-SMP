@@ -60,6 +60,10 @@ public final class SellMenu extends AbstractContainerMenu {
         }
     }
 
+    public SellMenu(int containerId, Inventory playerInventory, Player player) {
+        this(containerId, playerInventory);
+    }
+
     public static void init() {
         CommandRegistrationCallback.EVENT.register((dispatcher, context, environment) -> registerCommand(dispatcher));
     }
