@@ -9,11 +9,11 @@ public final class StatsHud {
     private StatsHud() {}
     private static volatile StatsPayload stats;
     private static final String[][] ICONS = {
-            {"..GGGG..", ".GwwwwG.", "GwwggwwG", "GwwggwwG", "GwwggwwG", ".GggggG.", "..GGGG..", "...GG..."},
-            {"..BBBB..", ".BBBBBB.", ".GggggG.", "GggggggG", "GgxGxggG", "GggggggG", "GgxggxgG", ".GggggG."},
-            {"SS....SS", ".SS..SS.", "..SSSS..", "...SS...", "..SSSS..", ".SS..SS.", "SS....SS", "........"},
-            {"..WWWW..", ".WWWWWW.", "WWXWWXWW", "WWWWWWWW", "WWXWWXWW", ".WWWWWW.", "..W..W..", "........"},
-            {"..YYYY..", ".YddddY.", "YdYYYYdY", "YdY..YdY", "YdY..YdY", "YdYYYYdY", ".YddddY.", "..YYYY.."}
+            {"..G..", ".GGG.", "GGwGG", ".GGG.", "..G.."},
+            {".BBB.", "BgggB", "BGxGB", ".GgG.", "..G.."},
+            {"S...S", ".S.S.", "..S..", ".S.S.", "S...S"},
+            {".WWW.", "WXXXW", "WXXxW", ".WXW.", ".X.X."},
+            {".YYY.", "YdddY", "YdYdY", "YdddY", ".YYY."}
     };
     private static int color(char pixel) {
         return switch (pixel) {
