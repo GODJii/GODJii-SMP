@@ -115,7 +115,10 @@ public final class TeleportRequests {
 			return fail(target, "Teleport failed. No money was charged.");
 		}
 		remove(request);
-		COOLDOWN_UNTIL.put(sender.getUUID(), System.currentTimeMillis() + COOLDOWN_MS);
+		double reduction = Math.max(0.0, Math.min(1.0, com.godjiismp.skills.Skills.level(sender, 5)
+				* com.godjiismp.skills.SkillsConfig.tpaCooldownReductionPerLevel));
+		long cooldown = Math.round(COOLDOWN_MS * (1.0 - reduction));
+		COOLDOWN_UNTIL.put(sender.getUUID(), System.currentTimeMillis() + cooldown);
 		sender.fallDistance = 0;
 		sender.sendSystemMessage(Component.literal("Teleport complete to " + target.getName().getString()
 				+ ". Charged $" + Money.fmt(PRICE) + ".").withStyle(ChatFormatting.GREEN));
@@ -185,3 +188,4 @@ public final class TeleportRequests {
 		return 0;
 	}
 }
+
