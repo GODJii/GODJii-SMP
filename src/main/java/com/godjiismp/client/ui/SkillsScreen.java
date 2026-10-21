@@ -1,6 +1,13 @@
 package com.godjiismp.client.ui;
 
-import com.godjiismp.skills.*;import com.godjiismp.weapons.LegendaryItems;import net.minecraft.client.Minecraft;import net.minecraft.client.gui.GuiGraphics;import net.minecraft.client.gui.screens.Screen;import net.minecraft.network.chat.Component;import net.minecraft.resources.ResourceLocation;import net.minecraft.world.item.ItemStack;
+import com.godjiismp.skills.*;
+import com.godjiismp.weapons.LegendaryItems;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
 public final class SkillsScreen extends Screen {
  private static final ResourceLocation BG=ResourceLocation.fromNamespaceAndPath("godjiismp","textures/gui/skill_window.png"),NODES=ResourceLocation.fromNamespaceAndPath("godjiismp","textures/gui/skill_nodes.png"),WIDGETS=ResourceLocation.fromNamespaceAndPath("godjiismp","textures/gui/skill_widgets.png");
@@ -11,7 +18,10 @@ public final class SkillsScreen extends Screen {
  public static void open(){Minecraft.getInstance().setScreen(new SkillsScreen());}
  private void clampSelection(){if(data!=null)selected=Math.max(1,Math.min(10,data.levels()[line]+1));}
  @Override protected void init(){left=(width-256)/2;top=(height-200)/2;if(data!=null)clampSelection();}
- @Override public void render(GuiGraphics g,int mouseX,int mouseY,float delta){this.renderBackground(g,mouseX,mouseY,delta);left=(width-256)/2;top=(height-200)/2;g.blit(BG,left,top,0,0,256,200,256,256);drawString(g,"SKILLS",left+14,top+11,0xFFF6CF6A,true);
+ @Override public void render(GuiGraphics g,int mouseX,int mouseY,float delta){
+  // Avoid Screen.renderBackground: it applies a strong world blur.
+  g.fill(0,0,width,height,0x55000000);
+  left=(width-256)/2;top=(height-200)/2;g.blit(BG,left,top,0,0,256,200,256,256);drawString(g,"SKILLS",left+14,top+11,0xFFF6CF6A,true);
   if(data==null){drawString(g,"Loading...",left+70,top+95,0xFFFFFFFF,false);super.render(g,mouseX,mouseY,delta);return;}
   g.blit(ResourceLocation.fromNamespaceAndPath("godjiismp","textures/item/skill_point.png"),left+190,top+6,0,0,14,14,16,16);String points="Points: "+data.points();g.drawString(font,points,left+244-font.width(points),top+11,0xFFF6CF6A,true);
   for(int i=0;i<6;i++){int x=left+7,y=top+28+i*28;int state=i==line?2:(mouseX>=x&&mouseX<x+32&&mouseY>=y&&mouseY<y+26?1:0);blit(g,WIDGETS,x,y,state*32,0,32,26);g.renderItem(new ItemStack(LegendaryItems.get(6+i)),x+8,y+5);}
