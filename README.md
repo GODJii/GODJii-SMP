@@ -17,7 +17,7 @@ This is an in-progress integration branch for GODJii SMP and the supplied My Mar
 - Permanent player titles: `/title`, `/title buy <id>`, `/title set <id>`, and `/title off` manage titles shown above players and in the tab list.
 - Blood Moon: naturally has a 1-in-7 chance at night; OPs can use `/bloodmoon start|stop|status` for testing. Blood Moon mobs gain 100% health and 30% attack damage, and player kills pay $10K.
 - Phantoms disabled through the vanilla `doInsomnia` gamerule.
-- The DrDonut-inspired server hub opens with M and provides direct buttons for Home, Shop (`/shop`), Sell (`/sell`), Skills, Daily Quests, Stats, Bounties, and Titles. The Sell button opens My Market's existing sell container so players can place items and confirm sale with its green button.
+- The DrDonut-inspired server hub opens with M and provides direct buttons for Home, Shop (`/shop`), Sell (`/sell`), Skills, Daily Quests, Stats, Bounties, and Titles. The Sell button opens a new server-authoritative 6-row sell grid. Players drag items into the grid and click the green SELL button; unsold or unpriced items are returned when they close it. The My Market `/sell` command remains available as before.
 - Skills: `/skills` or K opens the skill tree; quests award skill points; OPs can use `/skills give <player> <points>`; `/skills reset` refunds spent points subject to config.
 - Skill progress is stored per player in world SavedData. Skill balance is in `config/godjiismp_skills.json` and weapon balance is in `config/godjiismp_weapons.json`; both files are created on first server start.
 - Six skill lines and the designer-provided skill screen are included. Fishing uses the allowed Luck-effect fallback; `/tpa` currently has no cooldown to reduce.
