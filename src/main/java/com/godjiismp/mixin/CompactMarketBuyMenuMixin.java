@@ -19,7 +19,7 @@ public abstract class CompactMarketBuyMenuMixin {
 
 	@ModifyArg(method = "<init>", at = @At(value = "INVOKE",
 			target = "Lnet/minecraft/world/inventory/ChestMenu;<init>(Lnet/minecraft/world/inventory/MenuType;ILnet/minecraft/world/entity/player/Inventory;Lnet/minecraft/world/Container;I)V"), index = 4)
-	private int godjiismp$removeBottomControlRow(int rows) {
+	private static int godjiismp$removeBottomControlRow(int rows) {
 		return rows == 6 ? 5 : rows;
 	}
 
