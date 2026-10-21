@@ -13,15 +13,16 @@ This is an in-progress integration branch for GODJii SMP and the supplied My Mar
 - Matching-color armor aura: `/aura on` and `/aura off` toggle the cosmetic particles.
 - Daily quests: `/quest` displays the current mining, mob-hunting, farming, or logging objective. Progress persists and completion pays $1M–$3M automatically.
 - Market event: `/market` shows the daily HOT/COLD categories. The event changes sale prices only and persists through restarts.
-- The right-side stats HUD uses in-game item icons for balance, mob kills, player kills, deaths, and play time.
+- The right-side stats HUD uses compact 8-bit icons for balance, mob kills, player kills, deaths, and play time.
 - Permanent player titles: `/title`, `/title buy <id>`, `/title set <id>`, and `/title off` manage titles shown above players and in the tab list.
 - Blood Moon: naturally has a 1-in-7 chance at night; OPs can use `/bloodmoon start|stop|status` for testing. Blood Moon mobs gain 100% health and 30% attack damage, and player kills pay $10K.
 - Phantoms disabled through the vanilla `doInsomnia` gamerule.
-- The DrDonut-inspired server hub opens with M and provides direct buttons for Home, Shop (`/shop`), Sell (`/sell`), Skills, Daily Quests, Stats, Bounties, and Titles. The Sell button opens a new server-authoritative 6-row sell grid. Players drag items into the grid and click the green SELL button; unsold or unpriced items are returned when they close it. The My Market `/sell` command remains available as before.
+- The DrDonut-inspired server hub opens with M and provides direct buttons for Home, Shop (`/shop`), Sell (`/sellgui`), Skills, Daily Quests, Stats, Bounties, and Titles. Sell uses Minecraft's standard 6-row container window and slots. Players drag items into the grid and click the green sell slot; unsold or unpriced items are returned when they close it. The My Market `/sell` command remains available as before.
 - Skills: `/skills` or K opens the skill tree; quests award skill points; OPs can use `/skills give <player> <points>`; `/skills reset` refunds spent points subject to config.
 - Skill progress is stored per player in world SavedData. Skill balance is in `config/godjiismp_skills.json` and weapon balance is in `config/godjiismp_weapons.json`; both files are created on first server start.
 - Six skill lines and the designer-provided skill screen are included. Fishing uses the allowed Luck-effect fallback; `/tpa` currently has no cooldown to reduce.
 - Six registered legendary items use the supplied art: Skeleton King Blade, Stormcaller Spear, Earthbreaker Hammer, Crimson Moon Scythe, Frostbite Bow, and Emberfang Axe. Only the first three have phase-one abilities; the remaining phase-two abilities are not implemented yet.
+- Legendary weapons have 2031 durability, accept Netherite Blocks as anvil repair material, can receive compatible weapon/bow and Unbreaking enchantments, and sell for $350M–$400M each. Their melee baseline is set so Sharpness V yields about 30% more damage than a Sharpness V Netherite Sword; Frostbite Bow arrows receive a 30% damage increase after bow enchantments. Values are configurable in `config/godjiismp_weapons.json`.
 - Legendary item crafting recipes are intentionally not included until the owner approves the proposed recipes.
 
 Arena and scheduled Arena events are intentionally not included in this NEW DAYS build, following the latest project specification. Keep new builds on a test server until the owner completes the in-game checklist.
