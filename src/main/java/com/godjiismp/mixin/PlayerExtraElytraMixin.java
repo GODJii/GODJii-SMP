@@ -11,7 +11,6 @@ import net.minecraft.world.level.GameRules;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -24,7 +23,6 @@ public abstract class PlayerExtraElytraMixin implements ExtraElytraHolder {
 			SynchedEntityData.defineId(Player.class, EntityDataSerializers.ITEM_STACK);
 	@Unique private static final String GODJIISMP_EXTRA_ELYTRA_TAG = "GODJiiExtraElytra";
 
-	@Shadow public abstract SynchedEntityData getEntityData();
 
 	@Redirect(method = "tryToStartFallFlying", at = @At(value = "INVOKE",
 			target = "Lnet/minecraft/world/entity/LivingEntity;getItemBySlot(Lnet/minecraft/world/entity/EquipmentSlot;)Lnet/minecraft/world/item/ItemStack;"), require = 0)
@@ -70,12 +68,12 @@ public abstract class PlayerExtraElytraMixin implements ExtraElytraHolder {
 	}
 
 	@Override public ItemStack godjiismp$getExtraElytra() {
-		return getEntityData().get(GODJIISMP_EXTRA_ELYTRA);
+		return ((Player) (Object) this).getEntityData().get(GODJIISMP_EXTRA_ELYTRA);
 	}
 
 	@Override public void godjiismp$setExtraElytra(ItemStack stack) {
 		ItemStack value = stack != null && stack.is(Items.ELYTRA) ? stack.copy() : ItemStack.EMPTY;
 		if (!value.isEmpty()) value.setCount(1);
-		getEntityData().set(GODJIISMP_EXTRA_ELYTRA, value);
+		((Player) (Object) this).getEntityData().set(GODJIISMP_EXTRA_ELYTRA, value);
 	}
 }
