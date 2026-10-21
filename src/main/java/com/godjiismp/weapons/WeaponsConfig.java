@@ -15,11 +15,11 @@ public final class WeaponsConfig {
 
 	public static final String[] IDS = {"skeleton_king_blade", "stormcaller_spear", "earthbreaker_hammer",
 			"crimson_moon_scythe", "frostbite_bow", "emberfang_axe"};
-	private static final int BALANCE_VERSION = 2;
+	private static final int BALANCE_VERSION = 3;
 	private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
-	// 11.3 + Sharpness V's 3.0 = 14.3, about 30% above a netherite sword's 11.0.
-	private static final double[] DEFAULT_DAMAGE = {11.3, 11.3, 11.3, 11.3, 11.3, 11.3};
+	// Original weapon damage values; enchantments remain available as usual.
+	private static final double[] DEFAULT_DAMAGE = {9.0, 8.0, 10.0, 9.0, 8.0, 10.0};
 	private static final double[] DEFAULT_SPEED = {1.6, 1.4, 1.0, 1.5, 1.6, 1.0};
 	private static final int[] DEFAULT_DURABILITY = {2031, 2031, 2031, 2031, 2031, 2031};
 	private static final int[] DEFAULT_ENCHANTABILITY = {15, 15, 15, 15, 1, 15};
@@ -34,10 +34,10 @@ public final class WeaponsConfig {
 	public static long[] sellPrice = DEFAULT_SELL_PRICE.clone();
 	public static int[] requiredAttack = {5, 7, 9, 0, 0, 0};
 	public static int[] cooldownSeconds = {12, 6, 15, 0, 0, 0};
-	public static double[] abilityDamage = {10.4, 7.8, 7.8, 0, 0, 0};
+	public static double[] abilityDamage = {8.0, 6.0, 6.0, 0, 0, 0};
 	public static double[] radius = {8, 6, 5, 0, 0, 0};
 	public static double[] specialVsUndead = {1.5, 1, 1, 1, 1, 1};
-	public static double bowProjectileDamageMultiplier = 1.3;
+	public static double bowProjectileDamageMultiplier = 1.0;
 	public static int[] chainTargets = {1, 2, 0, 0, 0, 0};
 	public static int comboHits = 3, comboWindowSeconds = 4;
 	public static double waveHalfWidth = .8, hammerPushHorizontal = .8, hammerPushVertical = .45;
@@ -54,11 +54,9 @@ public final class WeaponsConfig {
 			}
 			if (oldVersion < BALANCE_VERSION) {
 				config.add("damage", GSON.toJsonTree(DEFAULT_DAMAGE));
-				config.add("durability", GSON.toJsonTree(DEFAULT_DURABILITY));
 				config.add("enchantability", GSON.toJsonTree(DEFAULT_ENCHANTABILITY));
-				config.add("sellPrice", GSON.toJsonTree(DEFAULT_SELL_PRICE));
-				config.add("abilityDamage", GSON.toJsonTree(new double[]{10.4, 7.8, 7.8, 0, 0, 0}));
-				config.addProperty("bowProjectileDamageMultiplier", 1.3);
+				config.add("abilityDamage", GSON.toJsonTree(new double[]{8.0, 6.0, 6.0, 0, 0, 0}));
+				config.addProperty("bowProjectileDamageMultiplier", 1.0);
 			}
 			config.addProperty("balanceVersion", BALANCE_VERSION);
 			if (!Files.exists(path)) Files.createDirectories(path.getParent());
