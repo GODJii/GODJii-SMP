@@ -1,0 +1,3 @@
+package com.godjiismp.skills;
+import net.minecraft.network.RegistryFriendlyByteBuf;import net.minecraft.network.codec.StreamCodec;import net.minecraft.network.protocol.common.custom.CustomPacketPayload;import net.minecraft.resources.ResourceLocation;
+public record SkillRequestPayload() implements CustomPacketPayload {public static final Type<SkillRequestPayload> TYPE=new Type<>(ResourceLocation.fromNamespaceAndPath("godjiismp_newdays","skills_request"));public static final StreamCodec<RegistryFriendlyByteBuf,SkillRequestPayload> CODEC=StreamCodec.unit(new SkillRequestPayload());@Override public Type<? extends CustomPacketPayload> type(){return TYPE;}}

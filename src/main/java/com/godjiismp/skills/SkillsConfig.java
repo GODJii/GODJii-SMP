@@ -1,0 +1,35 @@
+package com.godjiismp.skills;
+
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import net.fabricmc.loader.api.FabricLoader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+/** Server-owned balance/configuration for skills. */
+public final class SkillsConfig {
+ private SkillsConfig() {}
+ public static final String[] LINES={"attack","defense","mining","farming","fishing","exploration"};
+ public static int[] costs={1,1,1,2,2,2,3,3,4,5};
+ public static long resetCost=0; public static int resetCooldownHours=24,normalQuestPoints=1,majorQuestMin=2,majorQuestMax=3;
+ public static double attackPerLevel=.03,defensePerLevel=.02,miningPerLevel=.03,saturationPerLevel=.04,walkPerLevel=.01,fallPerLevel=.05;
+ public static double monsterKillHeal=2,lowHealthHeal=4,lowHealthThreshold=.20,farmlandGrowthChance=.015,farmlandRadius=5;
+ public static int defenseHealCooldownSeconds=120,miningAutoPickupLevel=6,farmingReplantLevel=3,farmingGrowthLevel=8,fishingEffectDurationTicks=40,fishingLuckAmplifier=0,skillTickIntervalTicks=20;
+ public static boolean pvpAttackBonus=true,pvpDefenseReduction=true;
+ public static String[][] perkNames=new String[6][10],perkDescriptions=new String[6][10];
+ public static void load(){
+  Path p=FabricLoader.getInstance().getConfigDir().resolve("godjiismp_skills.json");
+  try { JsonObject d=defaults(); if(Files.exists(p)){JsonObject in=JsonParser.parseString(Files.readString(p)).getAsJsonObject(); merge(d,in);} else Files.createDirectories(p.getParent());
+   read(d); refreshDescriptions(d); Files.writeString(p,new GsonBuilder().setPrettyPrinting().create().toJson(d)+"\n");
+  }catch(Exception e){throw new IllegalStateException("Invalid godjiismp_skills.json",e);}
+ }
+ private static JsonObject defaults(){JsonObject o=new JsonObject();o.add("costs",new GsonBuilder().create().toJsonTree(costs));o.addProperty("resetCost",resetCost);o.addProperty("resetCooldownHours",resetCooldownHours);o.addProperty("normalQuestPoints",normalQuestPoints);o.addProperty("majorQuestMin",majorQuestMin);o.addProperty("majorQuestMax",majorQuestMax);o.addProperty("attackPerLevel",attackPerLevel);o.addProperty("defensePerLevel",defensePerLevel);o.addProperty("miningPerLevel",miningPerLevel);o.addProperty("saturationPerLevel",saturationPerLevel);o.addProperty("walkPerLevel",walkPerLevel);o.addProperty("fallPerLevel",fallPerLevel);o.addProperty("monsterKillHeal",monsterKillHeal);o.addProperty("lowHealthHeal",lowHealthHeal);o.addProperty("lowHealthThreshold",lowHealthThreshold);o.addProperty("farmlandGrowthChance",farmlandGrowthChance);o.addProperty("farmlandRadius",farmlandRadius);o.addProperty("defenseHealCooldownSeconds",defenseHealCooldownSeconds);o.addProperty("miningAutoPickupLevel",miningAutoPickupLevel);o.addProperty("farmingReplantLevel",farmingReplantLevel);o.addProperty("farmingGrowthLevel",farmingGrowthLevel);o.addProperty("fishingEffectDurationTicks",fishingEffectDurationTicks);o.addProperty("fishingLuckAmplifier",fishingLuckAmplifier);o.addProperty("skillTickIntervalTicks",skillTickIntervalTicks);o.addProperty("pvpAttackBonus",pvpAttackBonus);o.addProperty("pvpDefenseReduction",pvpDefenseReduction);
+  JsonObject names=new JsonObject(),desc=new JsonObject();for(int l=0;l<6;l++){String key=LINES[l];String[] n=new String[10],x=new String[10];for(int i=0;i<10;i++){n[i]="Path of "+key+" "+(i+1);x[i]=description(l,i+1);}names.add(key,new GsonBuilder().create().toJsonTree(n));desc.add(key,new GsonBuilder().create().toJsonTree(x));}o.add("perkNames",names);o.add("perkDescriptions",desc);return o;}
+ private static String description(int l,int lv){return switch(l){case 0->"Deal +"+Math.round(attackPerLevel*lv*100)+"% damage to monsters and players."+(lv==10?" Heal "+monsterKillHeal+" HP after killing a monster.":"");case 1->"Take "+Math.round(defensePerLevel*lv*100)+"% less damage."+(lv==10?" Heal "+lowHealthHeal+" HP below "+Math.round(lowHealthThreshold*100)+"% health ("+defenseHealCooldownSeconds+"s cooldown).":"");case 2->"Mine "+Math.round(miningPerLevel*lv*100)+"% faster."+(lv==miningAutoPickupLevel?" Mined drops go straight into your inventory.":"");case 3->"Food restores "+Math.round(saturationPerLevel*lv*100)+"% more saturation."+(lv==farmingReplantLevel?" Replant mature wheat and carrots automatically.":lv==farmingGrowthLevel?" Nearby crops may grow faster.":"");case 4->"Fishing grants Luck while you hold a fishing rod (fallback for shorter bite waits).";default->"Move +"+Math.round(walkPerLevel*lv*100)+"% faster and take "+Math.round(fallPerLevel*lv*100)+"% less fall damage.";};}
+ private static void merge(JsonObject dest,JsonObject in){in.entrySet().forEach(e->dest.add(e.getKey(),e.getValue()));}
+ private static void refreshDescriptions(JsonObject o){JsonObject descriptions=new JsonObject();for(int l=0;l<6;l++){String[] values=new String[10];for(int i=0;i<10;i++)values[i]=description(l,i+1);perkDescriptions[l]=values;descriptions.add(LINES[l],new GsonBuilder().create().toJsonTree(values));}o.add("perkDescriptions",descriptions);}
+ private static void read(JsonObject o){costs=o.getAsJsonArray("costs").asList().stream().mapToInt(x->x.getAsInt()).toArray();if(costs.length!=10)throw new IllegalArgumentException("costs must contain 10 values");resetCost=o.get("resetCost").getAsLong();resetCooldownHours=o.get("resetCooldownHours").getAsInt();normalQuestPoints=o.get("normalQuestPoints").getAsInt();majorQuestMin=o.get("majorQuestMin").getAsInt();majorQuestMax=o.get("majorQuestMax").getAsInt();attackPerLevel=o.get("attackPerLevel").getAsDouble();defensePerLevel=o.get("defensePerLevel").getAsDouble();miningPerLevel=o.get("miningPerLevel").getAsDouble();saturationPerLevel=o.get("saturationPerLevel").getAsDouble();walkPerLevel=o.get("walkPerLevel").getAsDouble();fallPerLevel=o.get("fallPerLevel").getAsDouble();monsterKillHeal=o.get("monsterKillHeal").getAsDouble();lowHealthHeal=o.get("lowHealthHeal").getAsDouble();lowHealthThreshold=o.get("lowHealthThreshold").getAsDouble();farmlandGrowthChance=o.get("farmlandGrowthChance").getAsDouble();farmlandRadius=o.get("farmlandRadius").getAsDouble();defenseHealCooldownSeconds=o.get("defenseHealCooldownSeconds").getAsInt();miningAutoPickupLevel=o.get("miningAutoPickupLevel").getAsInt();farmingReplantLevel=o.get("farmingReplantLevel").getAsInt();farmingGrowthLevel=o.get("farmingGrowthLevel").getAsInt();fishingEffectDurationTicks=o.get("fishingEffectDurationTicks").getAsInt();fishingLuckAmplifier=o.get("fishingLuckAmplifier").getAsInt();skillTickIntervalTicks=o.get("skillTickIntervalTicks").getAsInt();pvpAttackBonus=o.get("pvpAttackBonus").getAsBoolean();pvpDefenseReduction=o.get("pvpDefenseReduction").getAsBoolean();for(int l=0;l<6;l++){String k=LINES[l];perkNames[l]=new GsonBuilder().create().fromJson(o.getAsJsonObject("perkNames").get(k),String[].class);perkDescriptions[l]=new GsonBuilder().create().fromJson(o.getAsJsonObject("perkDescriptions").get(k),String[].class);}}
+}
+
+

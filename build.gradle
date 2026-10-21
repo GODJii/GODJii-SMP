@@ -4,16 +4,13 @@ plugins {
 }
 
 repositories {
-	// Add repositories to retrieve artifacts from in here.
-	// You should only use this when depending on other mods because
-	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
-	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
-	// for more information about repositories.
+	// The supplied Market JAR is published as a local module so Loom can nest it.
+	maven { url = uri("$projectDir/libs/maven") }
 }
 
 loom {
 	mods {
-		"godjiismp" {
+		"godjiismp_newdays" {
 			sourceSet sourceSets.main
 		}
 	}
@@ -27,6 +24,10 @@ dependencies {
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+
+	// Bundle the supplied latest My Market patch inside this distribution.
+	modImplementation "com.mymarket:mymarket:17537"
+	include "com.mymarket:mymarket:17537"
 }
 
 processResources {
@@ -51,6 +52,10 @@ java {
 
 	sourceCompatibility = JavaVersion.VERSION_21
 	targetCompatibility = JavaVersion.VERSION_21
+}
+
+base {
+	archivesName = "godjiismp-new-days"
 }
 
 jar {
