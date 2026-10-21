@@ -11,9 +11,18 @@ public class GodjiiExtras implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		ExtrasConfig.load();
+		com.godjiismp.market.SellMenu.init();
 		CommandRegistrationCallback.EVENT.register(CoordsHud::register);
 		CommandRegistrationCallback.EVENT.register(ArmorCommands::register);
+		CommandRegistrationCallback.EVENT.register(ArmorAura::register);
+		MarketFluctuations.init();
+		DailyQuests.init();
+		PlayerTitles.init();
+		BloodMoon.init();
+		BossSystem.init();
+		StatsPanel.init();
 		CoordsHud.init();
+		ArmorAura.init();
 		GodjiiSmpMod.LOGGER.info("GODJii SMP extras loaded (trim remover {}, armor color {})",
 				ExtrasConfig.trimRemoveCost, ExtrasConfig.armorColorCost);
 	}

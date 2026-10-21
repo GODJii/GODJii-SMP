@@ -1,0 +1,28 @@
+{
+  "required": true,
+  "package": "com.godjiismp.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "MarketPricesMixin",
+    "MarketWeaponBuyPriceMixin",
+    "PlayerExtraElytraMixin",
+    "ServerPlayerExtraElytraMixin",
+    "InventoryMenuExtraElytraMixin",
+    "ExtraElytraFlightMixin",
+    "accessor.AbstractContainerMenuAccessor",
+    "BlockItemQuestMixin",
+    "EndCrystalItemMixin",
+    "SkeletonKingLootMixin",
+    "SkillDamageMixin",
+    "SkillMiningMixin",
+    "SkillFoodMixin"
+  ],
+  "client": [
+    "ExtraElytraRenderMixin",
+    "AbstractContainerScreenAccessor",
+    "InventoryScreenExtraElytraSlotMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
