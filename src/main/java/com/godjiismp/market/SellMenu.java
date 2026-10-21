@@ -28,7 +28,7 @@ public final class SellMenu extends AbstractContainerMenu {
     private static final int SELL_ROWS = 6;
     private static final int SELL_COLUMNS = 9;
     private static final int BUTTON_SLOT = 53;
-    private static final int SELLABLE_SLOTS = 52;
+    private static final int SELLABLE_SLOTS = 53;
     public static final MenuType<SellMenu> TYPE = Registry.register(BuiltInRegistries.MENU,
             ResourceLocation.fromNamespaceAndPath("godjiismp_newdays", "sell_menu"), new MenuType<>(SellMenu::new, FeatureFlags.VANILLA_SET));
 
