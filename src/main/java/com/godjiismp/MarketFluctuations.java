@@ -2,6 +2,8 @@ package com.godjiismp;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mymarket.Prices;
+import com.godjiismp.weapons.LegendaryItems;
+import com.godjiismp.weapons.WeaponsConfig;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
@@ -120,6 +122,9 @@ public final class MarketFluctuations {
 	/** Mixin hook for Prices.unitSell; the shop's buyPrice path remains untouched. */
 	public static long applySellPrice(ItemStack stack, long basePrice) {
 		if (stack.isEmpty()) return basePrice;
+		for (int i = 0; i < WeaponsConfig.IDS.length; i++) {
+			if (stack.getItem() == LegendaryItems.get(i)) return WeaponsConfig.sellPrice[i];
+		}
 		// Ensure every future Skeleton King drop is sellable even when the supplied market
 		// patch has no entry for it. Existing market prices always take precedence.
 		if (basePrice <= 0) basePrice = bossDropFallback(stack);
