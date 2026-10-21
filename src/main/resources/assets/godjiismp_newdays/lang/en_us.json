@@ -1,19 +1,5 @@
 {
-  "item.godjiismp_newdays.skeleton_king_blade": "Skeleton King Blade",
-  "item.godjiismp_newdays.stormcaller_spear": "Stormcaller Spear",
-  "item.godjiismp_newdays.earthbreaker_hammer": "Earthbreaker Hammer",
-  "item.godjiismp_newdays.crimson_moon_scythe": "Crimson Moon Scythe",
-  "item.godjiismp_newdays.frostbite_bow": "Frostbite Bow",
-  "item.godjiismp_newdays.emberfang_axe": "Emberfang Axe",
-  "item.godjiismp_newdays.skill_icon_attack": "Attack Skill Icon",
-  "item.godjiismp_newdays.skill_icon_defense": "Defense Skill Icon",
-  "item.godjiismp_newdays.skill_icon_mining": "Mining Skill Icon",
-  "item.godjiismp_newdays.skill_icon_farming": "Farming Skill Icon",
-  "item.godjiismp_newdays.skill_icon_fishing": "Fishing Skill Icon",
-  "item.godjiismp_newdays.skill_icon_exploration": "Exploration Skill Icon",
-  "item.godjiismp_newdays.skill_point": "Skill Point",
-  "item.godjiismp_newdays.skill_locked": "Locked Skill",
-  "item.godjiismp_newdays.skill_unlocked": "Unlocked Skill",
   "key.godjiismp_newdays.skills": "Open Skills",
   "key.categories.misc": "Miscellaneous"
 }
+
