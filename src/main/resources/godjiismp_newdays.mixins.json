@@ -5,7 +5,6 @@
   "mixins": [
     "MarketPricesMixin",
     "MarketWeaponBuyPriceMixin",
-    "CompactMarketBuyMenuMixin",
     "PlayerExtraElytraMixin",
     "ServerPlayerExtraElytraMixin",
     "InventoryMenuExtraElytraMixin",
@@ -18,10 +17,11 @@
     "SkillMiningMixin",
     "SkillFoodMixin"
   ],
+  "client": [
+    "ExtraElytraRenderMixin",
+    "InventoryScreenExtraElytraSlotMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
-  },
-  "client": [
-    "ExtraElytraRenderMixin"
-  ]
+  }
 }
