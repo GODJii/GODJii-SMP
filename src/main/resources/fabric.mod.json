@@ -1,22 +1,30 @@
 {
-	"schemaVersion": 1,
-	"id": "godjiismp_newdays",
-	"version": "${version}",
-	"name": "GODJii SMP NEW DAYS",
-	"description": "GODJii SMP NEW DAYS combines the GODJii SMP features and My Market economy.",
-	"authors": ["Kojji"],
-	"license": "CC0-1.0",
-	"environment": "*",
-	"jars": [{ "file": "META-INF/jars/mymarket-17537.jar" }],
-	"mixins": ["godjiismp_newdays.mixins.json"],
-	"entrypoints": {
-		"main": ["com.godjiismp.GodjiiSmpMod", "com.godjiismp.GodjiiExtras"],
-		"client": ["com.godjiismp.NewDaysClient"]
-	},
-	"depends": {
-		"fabricloader": ">=0.16.0",
-		"minecraft": "~1.21.1",
-		"java": ">=21",
-		"fabric-api": "*"
-	}
+  "schemaVersion": 1,
+  "id": "godjiismp_newdays",
+  "version": "${version}",
+  "name": "GODJii SMP NEW DAYS",
+  "description": "GODJii SMP NEW DAYS combines the GODJii SMP features and My Market economy.",
+  "authors": [
+    "Kojji"
+  ],
+  "license": "CC0-1.0",
+  "environment": "*",
+  "mixins": [
+    "godjiismp_newdays.mixins.json"
+  ],
+  "entrypoints": {
+    "main": [
+      "com.godjiismp.GodjiiSmpMod",
+      "com.godjiismp.GodjiiExtras"
+    ],
+    "client": [
+      "com.godjiismp.NewDaysClient"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": "~1.21.1",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
 }

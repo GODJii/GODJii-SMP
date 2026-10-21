@@ -22,7 +22,6 @@
     "defaultRequire": 1
   },
   "client": [
-    "ExtraElytraRenderMixin",
-    "ExtraElytraSlotIconMixin"
+    "ExtraElytraRenderMixin"
   ]
 }
